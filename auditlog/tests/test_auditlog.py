@@ -7,6 +7,8 @@ from odoo.tests.common import TransactionCase
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
 from odoo.addons.base.models.res_users import name_boolean_group
 
+from .common import AuditLogRuleCommon
+
 
 class AuditlogCommon:
     def test_LogCreation(self):
@@ -277,7 +279,7 @@ class TestAuditlogFull(TransactionCase, AuditlogCommon):
         self.groups_model_id = self.env.ref("base.model_res_groups").id
         self.groups_rule = self.env["auditlog.rule"].create(
             {
-                "name": "testrule for groups",
+                "name": "TestAuditlogFull",
                 "model_id": self.groups_model_id,
                 "log_read": True,
                 "log_create": True,
@@ -298,7 +300,7 @@ class TestAuditlogFast(TransactionCase, AuditlogCommon):
         self.groups_model_id = self.env.ref("base.model_res_groups").id
         self.groups_rule = self.env["auditlog.rule"].create(
             {
-                "name": "testrule for groups",
+                "name": "TestAuditlogFast",
                 "model_id": self.groups_model_id,
                 "log_read": True,
                 "log_create": True,
@@ -313,14 +315,10 @@ class TestAuditlogFast(TransactionCase, AuditlogCommon):
         super().tearDown()
 
 
-class TestFieldRemoval(TransactionCase):
+class TestFieldRemoval(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-
-        # Clear all existing logging lines
-        existing_audit_logs = cls.env["auditlog.log"].search([])
-        existing_audit_logs.unlink()
 
         # Create a test model to remove
         cls.test_model = (
@@ -351,7 +349,7 @@ class TestFieldRemoval(TransactionCase):
         cls.auditlog_rule = cls.env["auditlog.rule"].create(
             [
                 {
-                    "name": "test.model",
+                    "name": "TestFieldRemoval",
                     "model_id": cls.test_model.id,
                     "log_type": "fast",
                     "log_read": False,
@@ -413,7 +411,7 @@ class TestAuditlogFullCaptureRecord(TransactionCase, AuditlogCommon):
         self.groups_model_id = self.env.ref("base.model_res_groups").id
         self.groups_rule = self.env["auditlog.rule"].create(
             {
-                "name": "testrule for groups with capture unlink record",
+                "name": "TestAuditlogFullCaptureRecord",
                 "model_id": self.groups_model_id,
                 "log_read": True,
                 "log_create": True,
@@ -429,7 +427,7 @@ class TestAuditlogFullCaptureRecord(TransactionCase, AuditlogCommon):
         super().tearDown()
 
 
-class AuditLogRuleTestForUserFields(TransactionCase):
+class AuditLogRuleTestForUserFields(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -475,7 +473,7 @@ class AuditLogRuleTestForUserFields(TransactionCase):
             .with_context(tracking_disable=True)
             .create(
                 {
-                    "name": "testrule 01",
+                    "name": "AuditLogRuleTestForUserFields",
                     "model_id": cls.contact_model_id,
                     "log_read": True,
                     "log_create": True,
@@ -617,11 +615,8 @@ class AuditLogRuleTestForUserFields(TransactionCase):
         # Checking log lines are created
         self.assertTrue(delete_log_record)
 
-        # Removing auditlog_rule
-        self.auditlog_rule.unlink()
 
-
-class AuditLogRuleTestForUserModel(TransactionCase):
+class AuditLogRuleTestForUserModel(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -634,7 +629,7 @@ class AuditLogRuleTestForUserModel(TransactionCase):
             .with_context(tracking_disable=True)
             .create(
                 {
-                    "name": "testrule 01",
+                    "name": "AuditLogRuleTestForUserModel",
                     "model_id": cls.user_model_id,
                     "log_read": True,
                     "log_create": True,
@@ -698,7 +693,7 @@ class AuditLogRuleTestForUserModel(TransactionCase):
         self.assertTrue(write_log_record)
 
 
-class AuditlogFast_excluded_fields(TransactionCase):
+class AuditlogFast_excluded_fields(AuditLogRuleCommon):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
@@ -719,7 +714,7 @@ class AuditlogFast_excluded_fields(TransactionCase):
             .with_context(tracking_disable=True)
             .create(
                 {
-                    "name": "testrule 01",
+                    "name": "AuditlogFast_excluded_fields",
                     "model_id": cls.contact_model_id,
                     "log_read": True,
                     "log_create": True,

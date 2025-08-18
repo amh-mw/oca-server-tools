@@ -9,9 +9,6 @@ class TestMultiCompany(TransactionCase):
     @classmethod
     def setUpClass(cls):
         super().setUpClass()
-        # Disarm any existing auditing rules.
-        cls.env["auditlog.rule"].search([]).unlink()
-        cls.env["auditlog.log"].search([]).unlink()
         # Set up a group with two share users from different companies
         cls.company1 = cls.env["res.company"].create({"name": "c1"})
         cls.company2 = cls.env["res.company"].create({"name": "c2"})
@@ -99,7 +96,7 @@ class TestMultiCompany(TransactionCase):
             .sudo()
             .create(
                 {
-                    "name": "Test rule for groups",
+                    "name": "TestMultiCompany",
                     "model_id": self.env["ir.model"]._get("res.groups").id,
                     "log_read": False,
                     "log_create": False,

@@ -2,9 +2,12 @@
 # License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl).
 
 import copy
+import logging
 
 from odoo import Command, _, api, fields, models
 from odoo.exceptions import UserError
+
+_logger = logging.getLogger(__name__)
 
 FIELDS_BLACKLIST = [
     "id",
@@ -176,6 +179,7 @@ class AuditlogRule(models.Model):
             setattr(model_class, method_name, new_method)
             setattr(type(model), check_attr, True)
             result = True
+            _logger.debug("%s _patch_method %s %s", self.name, model._name, method_name)
         return result
 
     def _patch_methods(self):
@@ -222,6 +226,7 @@ class AuditlogRule(models.Model):
                     )
                     delattr(type(model_model), f"auditlog_ruled_{method}")
                     updated = True
+                    _logger.debug("%s _revert_method %s %s", rule.name, model_model._name, method)
         if updated:
             self._update_registry()
 

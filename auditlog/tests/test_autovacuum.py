@@ -11,7 +11,7 @@ class TestAuditlogAutovacuum(TransactionCase):
         self.groups_model_id = self.env.ref("base.model_res_groups").id
         self.groups_rule = self.env["auditlog.rule"].create(
             {
-                "name": "testrule for groups",
+                "name": "TestAuditlogAutovacuum",
                 "model_id": self.groups_model_id,
                 "log_read": True,
                 "log_create": True,
